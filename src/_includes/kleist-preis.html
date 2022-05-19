@@ -1,0 +1,15 @@
+{% set title = "Kleist-Preis" %}
+
+{% extends "default.html" %}
+{% block content %}
+
+<div class="container flex flex-col-reverse lg:flex-row mx-auto px-6 lg:px-0 lg:gap-32">
+
+    {{ content | safe }}
+    {% set subnav = subnavkleistpreis %}
+    {% include "../_includes/partials/subnav.html" %}
+</div>
+
+</div>
+
+{% endblock %}

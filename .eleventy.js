@@ -2,6 +2,8 @@ const yaml = require("js-yaml");
 const { DateTime } = require("luxon");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const htmlmin = require("html-minifier");
+const _ = require("lodash");
+const { isAfter, isBefore, format, isToday } = require('date-fns');
 
 module.exports = function (eleventyConfig) {
   // Disable automatic use of your .gitignore
@@ -10,11 +12,47 @@ module.exports = function (eleventyConfig) {
   // Merge data instead of overriding
   eleventyConfig.setDataDeepMerge(true);
 
+  // group all posts by year, transform the object into an array and reverse the result (descending order). This method can be used to group posts by any other property, e.g. category. (https://darekkay.com/blog/eleventy-group-posts-by-year/)
+  eleventyConfig.addCollection("postsByYear", (collection) => {
+    return _.chain(collection.getAllSorted())
+      .groupBy((post) => post.date.getFullYear())
+      .toPairs()
+      .reverse()
+      .value();
+  });
+
+  // Returns kjb items, sorted by year, reverse
+  eleventyConfig.addCollection('kjb', collection => {
+    return collection
+      .getFilteredByGlob('./src/kjbs/*.md')
+      .sort((a, b) => (Number(a.data.year) > Number(b.data.year) ? 1 : -1))
+      .reverse();
+  });
+
+  eleventyConfig.addCollection('upcomingEvents', collection => {
+    return collection
+      .getFilteredByGlob('./src/veranstaltungen/*.md')
+      .filter((veranstaltung) => isToday(new Date(veranstaltung.data.date)) || isAfter(new Date(veranstaltung.data.date), new Date()));
+  });
+
+  eleventyConfig.addCollection('pastEvents', collection => {
+    return collection
+      .getFilteredByTag('event')
+      //.getFilteredByGlob('./src/veranstaltungen/*.md')
+      .filter((veranstaltung) => isBefore(new Date(veranstaltung.data.date), new Date()));
+  });
+
   // human readable date
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
       "dd LLL yyyy"
     );
+  });
+
+  // sort by order
+  eleventyConfig.addFilter("sortByOrder", arr => {
+    arr.sort((a, b) => (a.platzierung) > (b.platzierung) ? 1 : -1);
+    return arr;
   });
 
   // Syntax Highlighting for Code blocks
@@ -34,6 +72,9 @@ module.exports = function (eleventyConfig) {
 
   // Copy Image Folder to /_site
   eleventyConfig.addPassthroughCopy("./src/static/img");
+
+  // Copy Download Folder to /_site
+  eleventyConfig.addPassthroughCopy("./src/static/download");
 
   // Copy favicon to route of /_site
   eleventyConfig.addPassthroughCopy("./src/favicon.ico");

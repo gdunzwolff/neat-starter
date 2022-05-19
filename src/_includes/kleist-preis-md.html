@@ -1,0 +1,10 @@
+{% set title = "Kleist-Preis" %}
+
+{% extends "md.html" %}
+
+<!-- Hier wird die Seitennavigation eingefügt -->
+
+{% block aside %}
+{% set subnav = subnavkleistpreis %}
+{% include "../_includes/partials/subnav.html" %}
+{% endblock %}

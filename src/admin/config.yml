@@ -12,53 +12,173 @@ public_folder: "/static/img"
 local_backend: true
 # publish_mode: editorial_workflow
 collections:
-  - label: "Blog"
-    name: "blog"
-    folder: "src/posts"
+  - label: "Newsletter"
+    name: "newsletter"
+    folder: "src/newsletters"
     create: true
     editor:
       preview: false
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "description", widget: "string" }
-      - { label: "Author", name: "author", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Ausgabe", name: "title", widget: "string" }
+      - { label: "Inhaltsangabe", name: "description", widget: "string" }
+      - { label: "Datum", name: "date", widget: "datetime" }
+      - { label: "Text", name: "body", widget: "markdown" }
+      # - widget: select
+      #   label: "tags"
+      #   name: "tags"
+      #   multiple: true
+      #   create: true
+      #   options: ["Tags", "created", "from", "config.yml"]
+  - label: "Kleist-Jahrbuch"
+    name: "kjb"
+    folder: "src/kjbs"
+    create: true
+    editor:
+      preview: false
+    fields:
+      - { label: "Ausgabe", name: "title", widget: "string" }
+      - { label: "Cover", name: "cover", widget: "string", required: false }
+      - { label: "Umschlagtext", name: "description", widget: "string" }
+      - { label: "Hrsg.", name: "hrsg", widget: "string" }
+      - { label: "Institutionen", name: "institutionen", widget: "string" }
+      - { label: "Verlag", name: "verlag", widget: "string" }
+      - { label: "Handelsangaben", name: "handelsangaben", widget: "string" }
+      - {
+          label: "SpringerLink",
+          name: "springerurl",
+          widget: "string",
+          required: false,
+        }
+      - { label: "Jahr", name: "year", widget: "string" }
+      - { label: "Datum", name: "date", widget: "datetime" }
+      - { label: "Inhaltsverzeichnis", name: "body", widget: "markdown" }
+      # - widget: select
+      #   label: "tags"
+      #   name: "tags"
+      #   multiple: true
+      #   create: true
+      #   options: ["Tags", "created", "from", "config.yml"]
+  - label: "Kleist-Preis"
+    name: "kleist-preis"
+    folder: "src/kleist-preise"
+    create: true
+    editor:
+      preview: true
+    fields:
+      - {
+          label: "Layout",
+          name: "layout",
+          widget: "hidden",
+          default: "kleist-preis",
+        }
+      - { label: "Titel", name: "title", widget: "string" }
+      - { label: "Kurztext", name: "description", widget: "string" }
+      - { label: "Preisjahr (yyyy)", name: "year", widget: "string" }
+      - { label: "Tagesdatum (yyyy-mm-dd)", name: "date", widget: "datetime" }
+      - { label: "Text", name: "body", widget: "markdown" }
       - widget: select
-        label: "tags"
-        name: "tags"
-        multiple: true
+        label: "Textsorte"
+        name: "genre"
+        multiple: false
         create: true
-        options: ["Tags", "created", "from", "config.yml"]
-  - label: "Settings"
-    name: "settings"
+        options: ["Nachricht", "Rede"]
+  - label: "Kleistpreis statische Seiten"
+    name: "preiseinzelseiten"
+    files:
+      - label: "Preisträger:innen"
+        name: "preistraeger"
+        file: "src/kleist-preis-einzelseiten/kleist-preistraegerinnen.md"
+        fields:
+          - { label: Layout, name: layout, widget: string }
+          - { label: Url, name: permalink, widget: string }
+          - { label: "Text", name: "body", widget: "markdown" }
+      - label: "Preis-Statut"
+        name: "statut"
+        file: "src/kleist-preis-einzelseiten/statut-kleist-preis.md"
+        fields:
+          - { label: Layout, name: layout, widget: string }
+          - { label: Url, name: permalink, widget: string }
+          - { label: "Text", name: "body", widget: "markdown" }
+      - label: "Preis-Geschichte"
+        name: "preisgeschichte"
+        file: "src/kleist-preis-einzelseiten/geschichte-kleist-preis.md"
+        fields:
+          - { label: Layout, name: layout, widget: string }
+          - { label: Url, name: permalink, widget: string }
+          - { label: "Text", name: "body", widget: "markdown" }
+  - label: "Navigation"
+    name: "navigation"
     editor:
       preview: false
     files:
-      - label: "Navigation"
+      - label: "Hauptnavigation"
         name: "items"
         file: "src/_data/navigation.yaml"
         fields:
           - label: Nav Items
             name: items
             widget: list
-            allow_add: false
+            allow_add: true
             collapsed: false
             fields:
               - { label: Title, name: text, widget: string }
               - { label: URL, name: url, widget: string }
-      - label: "Quick Links"
-        name: "links"
-        file: "src/_data/quicklinks.yaml"
+      - label: "Subnav Kleist-Preis"
+        name: "kleistpreis"
+        file: "src/_data/subnavkleistpreis.yaml"
         fields:
           - label: Nav Items
-            name: links
+            name: navitems
             widget: list
+            allow_add: true
             collapsed: false
             fields:
-              - { label: Title, name: title, widget: string }
+              - { label: Title, name: text, widget: string }
               - { label: URL, name: url, widget: string }
-              - { label: Description, name: desc, widget: string }
+      - label: "Subnav Kleist-Jahrbuch"
+        name: "kjb"
+        file: "src/_data/subnavkjb.yaml"
+        fields:
+          - label: Nav Items
+            name: navitems
+            widget: list
+            allow_add: true
+            collapsed: false
+            fields:
+              - { label: Title, name: text, widget: string }
+              - { label: URL, name: url, widget: string }
+  - label: "Homepage"
+    name: "settings"
+    editor:
+      preview: false
+    files:
+      - label: "Homepage"
+        name: "heros"
+        file: "src/_data/aufmacher.yaml"
+        fields:
+          - label: Aufmacher
+            name: heros
+            widget: list
+            collapsed: true
+            fields:
+              - { label: Rubrik, name: rubrik, widget: string }
+              - { label: Titel, name: titel, widget: string }
+              - { label: Bild, name: bild, widget: image, required: false }
+              - {
+                  label: Bildunterschrift,
+                  name: bildunterschrift,
+                  widget: string,
+                  required: false,
+                }
+              - { label: Bild 2, name: bild2, widget: string, required: false }
+              - { label: URL, name: url, widget: string }
+              - { label: Text, name: text, widget: markdown }
+              - {
+                  label: Spalten,
+                  name: spalten,
+                  widget: string,
+                  required: false,
+                }
       - label: "Meta Settings"
         name: "settings"
         file: "src/_data/settings.yaml"

@@ -1,0 +1,22 @@
+<div class="mt-6 lg:mt-20 lg:min-w-[250px] lg:max-w-[250px]">
+    <div class="grid grid-cols-4 lg:grid-cols-none">
+        <!--{% block subnavitems %}-->
+        <img class="w-16 lg:w-24 mb-6" src="{{subnav.image}}" alt="logo kleist-preis" />
+        <div class="col-span-3 lg:container lg:w-full">
+            <ul class="flex flex-col">
+                {% for navitem in subnav.navitems %}
+                <li class="nav__item mb-2">
+                    {% if page.url == navitem.url %}
+                    <a class="text-ml inline-block border-l-4 border-kleistBlauGreen text-gray-500 no-underline hover:text-kleistBlauGreen lg:py-2 pl-2"
+                        href="{{ navitem.url }}">{{ navitem.text }}</a>
+                    {% else %}
+                    <a class="text-ml inline-block border-l-2 hover:border-kleistBlauGreen text-gray-500 no-underline hover:text-kleistBlauGreen lg:py-2 pl-2"
+                        href="{{ navitem.url }}">{{ navitem.text }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!--{% endblock %}-->
+    </div>
+</div>

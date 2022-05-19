@@ -1,0 +1,41 @@
+---
+layout: kleist-preis
+---
+{% set title = "Kleist-Preis" %}
+
+<div class="my-12">
+    <img src="/static/img/kleist-preis/kleistpreisaufmacher-neu.jpg" alt="fotomontage kleispreis">
+    <h1 class="text-3xl text-kleistBlauGreen font-bold mt-8">Reden und Berichte anlässlich der
+        <br />Kleist-Preis Verleihungen
+    </h1>
+    <!--{% set postslist = collections.preis %}-->
+
+    {% set showYear = true %}
+    {% set postslist = collections.preis %}
+
+    <ol reversed>
+        {% set currentYear = "" %}
+        {% for post in postslist | reverse %}
+        {% if showYear %}
+        {% set postYear = post.date.getFullYear() %}
+        {% if currentYear != postYear %}
+        {% set currentYear = postYear %}
+        <h2 class="mt-16 font-bold text-3xl text-kleistBlauGreen mb-2">{{ postYear }}</h2>
+        {% endif %}
+        {% endif %}
+        <li>
+            <h3 class="font-bold text-xl text-gray-800 mb-1"><a href="{{ post.url | url }}">{{ post.data.title
+                    }}</a>
+            </h3>
+            {% if post.data.description %}
+            <p class="text-lg text-gray-500 mb-3">
+                {{ post.data.description }} <span><a href="{{ post.url | url }}"
+                        class="ml-4 text-kleistBlauGreen font-bold text-sm">
+                        Weiter lesen  →
+                    </a></span>
+            </p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</div>
